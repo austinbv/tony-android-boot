@@ -5,7 +5,7 @@
           package="io.pivotal.labsboot">
 
     <application android:name=".AndroidBootApplication">
-        <activity android:name=".example.AndroidBootActivity" android:screenOrientation="portrait">
+        <activity android:name=".alkyhol.AlkyholActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

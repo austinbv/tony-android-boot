@@ -4,7 +4,7 @@ import android.app.Application;
 
 import dagger.ObjectGraph;
 
-public class AndroidBootApplication extends Application {
+public class AndroidBootApplication extends Application implements Injector {
     private ObjectGraph mGraph;
 
     @Override
@@ -23,6 +23,7 @@ public class AndroidBootApplication extends Application {
         return modules;
     }
 
+    @Override
     public void inject(Object object) {
         mGraph.inject(object);
     }

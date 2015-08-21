@@ -6,11 +6,11 @@ import org.robolectric.RuntimeEnvironment;
 
 import dagger.Module;
 import dagger.Provides;
-import io.pivotal.labsboot.example.TestAndroidBootModule;
+import io.pivotal.labsboot.alkyhol.TestAlkyholModule;
 
 @Module(
         includes = {
-                io.pivotal.labsboot.example.TestAndroidBootModule.class
+                TestAlkyholModule.class
         },
         library = true,
         complete = false

@@ -4,10 +4,11 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
+import io.pivotal.labsboot.alkyhol.AlkyholModule;
 
 @Module(
         includes = {
-                io.pivotal.labsboot.example.AndroidBootModule.class
+                AlkyholModule.class
         },
         library = true,
         complete = false
