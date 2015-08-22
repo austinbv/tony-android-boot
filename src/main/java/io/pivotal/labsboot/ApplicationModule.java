@@ -36,7 +36,7 @@ public class ApplicationModule {
         return new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setConverter(new JacksonConverter(objectMapper))
-                .setEndpoint("http://lcboapi.com")
+                .setEndpoint("http://192.168.1.141:8080")
                 .build();
     }
 
