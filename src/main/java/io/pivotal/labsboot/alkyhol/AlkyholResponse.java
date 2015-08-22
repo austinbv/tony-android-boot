@@ -1,12 +1,13 @@
 package io.pivotal.labsboot.alkyhol;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 class AlkyholResponse {
-    @SerializedName("result")
     private List<Alkyhol> alkyhols;
+
+    public AlkyholResponse() {}
 
     public AlkyholResponse(final List<Alkyhol> alkyhols) {
         this.alkyhols = alkyhols;
@@ -16,6 +17,7 @@ class AlkyholResponse {
         return alkyhols;
     }
 
+    @JsonProperty("result")
     public void setAlkyhols(final List<Alkyhol> alkyhols) {
         this.alkyhols = alkyhols;
     }
