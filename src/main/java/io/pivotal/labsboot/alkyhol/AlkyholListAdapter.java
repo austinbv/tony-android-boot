@@ -1,40 +1,21 @@
 package io.pivotal.labsboot.alkyhol;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.content.Context;
+import android.widget.ArrayAdapter;
 
 import java.util.List;
 
 import io.pivotal.labsboot.SuccessListener;
 
-public class AlkyholListAdapter extends BaseAdapter implements SuccessListener<Alkyhol> {
-    @Override
-    public int getCount() {
-        return 0;
+class AlkyholListAdapter extends ArrayAdapter<Alkyhol> implements SuccessListener<List<Alkyhol>> {
+    public AlkyholListAdapter(final Context context, final int resource) {
+        super(context, resource);
     }
 
     @Override
-    public Object getItem(final int i) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(final int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(final int i, final View view, final ViewGroup viewGroup) {
-        return null;
-    }
-
-    public void setAlkyhols(final List<Alkyhol> alkyhols) {
-
-    }
-
-    @Override
-    public void onSuccess(final Alkyhol result) {
-
+    public void onSuccess(final List<Alkyhol> result) {
+        clear();
+        addAll(result);
+        notifyDataSetChanged();
     }
 }

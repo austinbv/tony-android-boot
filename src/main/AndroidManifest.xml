@@ -4,6 +4,8 @@
           android:versionName="1.0.0-SNAPSHOT"
           package="io.pivotal.labsboot">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application android:name=".AndroidBootApplication">
         <activity android:name=".alkyhol.AlkyholActivity" android:screenOrientation="portrait">
             <intent-filter>

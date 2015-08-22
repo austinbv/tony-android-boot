@@ -1,5 +1,7 @@
 package io.pivotal.labsboot.alkyhol;
 
+import java.util.concurrent.ExecutorService;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -13,13 +15,27 @@ import static org.mockito.Mockito.spy;
                 AlkyholActivity.class,
                 AlkyholActivityTest.class,
                 AlkyholListFragment.class,
-                AlkyholListFragmentTest.class
+                AlkyholListFragmentTest.class,
+                AlkyholListDelegate.class,
+                AlkyholListDelegateTest.class
         },
         library = true,
         complete = false,
         overrides = true
 )
 public class TestAlkyholModule {
+    @Provides
+    @Singleton
+    AlkyholApiClient providesApiClient() {
+        return mock(AlkyholApiClient.class);
+    }
+
+    @Provides
+    @Singleton
+    ExecutorService providesExecutor() {
+        return mock(ExecutorService.class);
+    }
+
     @Provides
     @Singleton
     AlkyholListDelegate providesDelegate() {

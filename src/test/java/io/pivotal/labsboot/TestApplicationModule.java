@@ -20,4 +20,9 @@ public class TestApplicationModule {
     Context providesApplicationContext() {
         return RuntimeEnvironment.application;
     }
+
+    @Provides
+    Injector providesInjector() {
+        return (Injector) RuntimeEnvironment.application;
+    }
 }
