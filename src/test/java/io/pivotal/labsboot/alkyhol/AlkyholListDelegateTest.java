@@ -1,52 +1,49 @@
 package io.pivotal.labsboot.alkyhol;
 
+import android.os.Handler;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import javax.inject.Inject;
-
-import io.pivotal.labsboot.BuildConfig;
-import io.pivotal.labsboot.ErrorListener;
-import io.pivotal.labsboot.Injector;
-import io.pivotal.labsboot.SuccessListener;
-import io.pivotal.labsboot.TestInjector;
+import io.pivotal.labsboot.domain.Alkyhol;
+import io.pivotal.labsboot.domain.AlkyholResponse;
+import io.pivotal.labsboot.domain.Link;
 import retrofit.RetrofitError;
 
+import static io.pivotal.labsboot.alkyhol.AlkyholListDelegate.DEFAULT_REQUEST;
 import static java.util.Collections.singletonList;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants=BuildConfig.class)
+@RunWith(MockitoJUnitRunner.class)
 public class AlkyholListDelegateTest {
-    @Inject
-    ExecutorService mockExecutorService;
-    @Inject
-    AlkyholApiClient mockAlkyholApiClient;
+    @Mock ExecutorService mockExecutorService;
+    @Mock AlkyholApiClient mockAlkyholApiClient;
+    @Mock Handler mockHandler;
 
     AlkyholListDelegate delegate;
 
     @Before
     public void setup() {
-        TestInjector.inject(this);
-        delegate = new AlkyholListDelegate((Injector) RuntimeEnvironment.application, mockExecutorService);
+        delegate = new AlkyholListDelegate(mockExecutorService, mockAlkyholApiClient, mockHandler);
     }
 
     @Test
     public void getAlkyhols_onSuccess() {
         final List<Alkyhol> alkyhols = singletonList(new Alkyhol());
-        doReturn(new AlkyholResponse(alkyhols)).when(mockAlkyholApiClient).getAlkyhols();
+        doReturn(new AlkyholResponse(alkyhols)).when(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
         final AlkyholListDelegate spiedDelegate = spy(delegate);
         spiedDelegate.getAlkyhols();
 
@@ -56,13 +53,13 @@ public class AlkyholListDelegateTest {
 
         runnable.run();
 
-        verify(mockAlkyholApiClient).getAlkyhols();
+        verify(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
         verify(spiedDelegate).notifySuccess(alkyhols);
     }
 
     @Test
     public void getAlkyhols_onFailure() {
-        doThrow(mock(RetrofitError.class)).when(mockAlkyholApiClient).getAlkyhols();
+        doThrow(mock(RetrofitError.class)).when(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
         final AlkyholListDelegate spiedDelegate = spy(delegate);
         spiedDelegate.getAlkyhols();
 
@@ -72,34 +69,30 @@ public class AlkyholListDelegateTest {
 
         runnable.run();
 
-        verify(mockAlkyholApiClient).getAlkyhols();
+        verify(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
         verify(spiedDelegate).notifyError();
     }
 
     @Test
-    public void notifySuccess() {
-        final SuccessListener mockListener = mock(SuccessListener.class);
-        final SuccessListener anotherMockListener = mock(SuccessListener.class);
-        final Object object = new Object();
+    public void loadNextPage_callsApiClientWithNextPage() {
+        final List<Alkyhol> alkyhols = singletonList(new Alkyhol());
+        final List<Link> links = singletonList(new Link("next", "/test.com/page=2"));
+        doReturn(new AlkyholResponse(alkyhols, links)).when(mockAlkyholApiClient).getAlkyhols(anyString());
 
-        delegate.registerSuccess(mockListener);
-        delegate.registerSuccess(anotherMockListener);
-        delegate.notifySuccess(object);
+        delegate.getAlkyhols();
+        ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
+        verify(mockExecutorService).submit(captor.capture());
+        Runnable runnable = captor.getValue();
+        runnable.run();
+        reset(mockExecutorService, mockAlkyholApiClient);
+        doReturn(new AlkyholResponse(alkyhols, links)).when(mockAlkyholApiClient).getAlkyhols(anyString());
 
-        verify(mockListener).onSuccess(object);
-        verify(anotherMockListener).onSuccess(object);
-    }
+        delegate.loadNextPage();
+        captor = ArgumentCaptor.forClass(Runnable.class);
+        verify(mockExecutorService).submit(captor.capture());
+        runnable = captor.getValue();
+        runnable.run();
 
-    @Test
-    public void notifyFailure() {
-        final ErrorListener mockListener = mock(ErrorListener.class);
-        final ErrorListener anotherMockListener = mock(ErrorListener.class);
-
-        delegate.registerError(mockListener);
-        delegate.registerError(anotherMockListener);
-        delegate.notifyError();
-
-        verify(mockListener).onError();
-        verify(anotherMockListener).onError();
+        verify(mockAlkyholApiClient).getAlkyhols("/test.com/page=2");
     }
 }

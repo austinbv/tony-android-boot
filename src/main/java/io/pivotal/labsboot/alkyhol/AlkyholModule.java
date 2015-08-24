@@ -1,13 +1,19 @@
 package io.pivotal.labsboot.alkyhol;
 
-import android.content.Context;
+import android.os.Handler;
+import android.view.LayoutInflater;
 
-import java.util.concurrent.ExecutorService;
+import com.bumptech.glide.RequestManager;
+
 import java.util.concurrent.Executors;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.pivotal.labsboot.Injector;
+import io.pivotal.labsboot.domain.Alkyhol;
+import io.pivotal.labsboot.framework.AdapterHelper;
 import retrofit.RestAdapter;
 
 @Module(
@@ -21,18 +27,12 @@ import retrofit.RestAdapter;
 )
 public class AlkyholModule {
     @Provides
-    AlkyholApiClient providesApiClient(final RestAdapter restAdapter) {
-        return new AlkyholApiClient(restAdapter);
-    }
-
-    @Provides
-    ExecutorService providesExecutor() {
-        return Executors.newSingleThreadExecutor();
-    }
-
-    @Provides
-    AlkyholListDelegate providesDelegate(final Injector injector, final ExecutorService executor) {
-        return new AlkyholListDelegate(injector, executor);
+    @Singleton
+    AlkyholListDelegate providesDelegate(
+            final RestAdapter restAdapter,
+            @Named("MainThread") final Handler handler)
+    {
+        return new AlkyholListDelegate(Executors.newSingleThreadExecutor(), new AlkyholApiClient(restAdapter), handler);
     }
 
     @Provides
@@ -41,7 +41,11 @@ public class AlkyholModule {
     }
 
     @Provides
-    AlkyholListAdapter providesAdapter(final Context context) {
-        return new AlkyholListAdapter(context, android.R.layout.simple_list_item_1);
+    AlkyholListAdapter providesAdapter(
+            final LayoutInflater layoutInflater,
+            final RequestManager requestManager,
+            final AlkyholListDelegate alkyholListDelegate
+    ) {
+        return new AlkyholListAdapter(layoutInflater, new AlkyholViewHolder.Factory(), new AlkyholListPresenter(requestManager), alkyholListDelegate, new AdapterHelper<Alkyhol>());
     }
 }

@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import javax.inject.Inject;
 
-import io.pivotal.labsboot.InjectionActivity;
+import io.pivotal.labsboot.injection.InjectionActivity;
 import io.pivotal.labsboot.R;
 
 public class AlkyholActivity extends InjectionActivity {

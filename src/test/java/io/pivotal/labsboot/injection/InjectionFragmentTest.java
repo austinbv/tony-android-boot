@@ -1,10 +1,13 @@
-package io.pivotal.labsboot;
+package io.pivotal.labsboot.injection;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+
+import io.pivotal.labsboot.BuildConfig;
+import io.pivotal.labsboot.TestAndroidBootApplication;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

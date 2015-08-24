@@ -3,6 +3,7 @@ package io.pivotal.labsboot;
 import android.app.Application;
 
 import dagger.ObjectGraph;
+import io.pivotal.labsboot.injection.Injector;
 
 public class AndroidBootApplication extends Application implements Injector {
     private ObjectGraph mGraph;

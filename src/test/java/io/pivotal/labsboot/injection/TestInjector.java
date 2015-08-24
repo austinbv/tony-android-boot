@@ -1,4 +1,4 @@
-package io.pivotal.labsboot;
+package io.pivotal.labsboot.injection;
 
 import org.robolectric.RuntimeEnvironment;
 

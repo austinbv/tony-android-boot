@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/list_item_alkyhol_image"
+        android:layout_width="@dimen/image_size"
+        android:layout_height="@dimen/image_size"
+        android:scaleType="fitXY"
+        android:layout_gravity="center_vertical"
+        tools:src="@drawable/thumb"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:gravity="end">
+        <TextView
+            android:id="@+id/list_item_alkyhol_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Bud Light"/>
+
+        <TextView
+            android:id="@+id/list_item_alkyhol_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="$5.00" />
+
+        <TextView
+            android:id="@+id/list_item_alkyhol_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="5.0%" />
+
+        <TextView
+            android:id="@+id/list_item_alkyhol_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="6 cans of 355ml" />
+    </LinearLayout>
+</LinearLayout>

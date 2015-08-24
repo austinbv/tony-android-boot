@@ -11,8 +11,8 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import io.pivotal.labsboot.ErrorListener;
-import io.pivotal.labsboot.InjectionFragment;
+import io.pivotal.labsboot.framework.ErrorListener;
+import io.pivotal.labsboot.injection.InjectionFragment;
 import io.pivotal.labsboot.R;
 
 public class AlkyholListFragment extends InjectionFragment implements ErrorListener {
@@ -42,6 +42,14 @@ public class AlkyholListFragment extends InjectionFragment implements ErrorListe
         mAlkyholListDelegate.registerSuccess(mAlkyholListAdapter);
         mAlkyholListDelegate.registerError(this);
         mAlkyholListDelegate.getAlkyhols();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mAlkyholListDelegate.unregisterSuccess(mAlkyholListAdapter);
+        mAlkyholListDelegate.unregisterError(this);
     }
 
     @Override

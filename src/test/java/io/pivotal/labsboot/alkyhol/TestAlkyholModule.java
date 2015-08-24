@@ -8,7 +8,6 @@ import dagger.Module;
 import dagger.Provides;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 @Module(
         injects = {
@@ -51,6 +50,6 @@ public class TestAlkyholModule {
     @Provides
     @Singleton
     AlkyholListAdapter providesAdapter() {
-        return spy(AlkyholListAdapter.class);
+        return new TestAdapter();
     }
 }

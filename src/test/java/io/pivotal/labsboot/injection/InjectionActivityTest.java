@@ -1,8 +1,7 @@
-package io.pivotal.labsboot.alkyhol;
+package io.pivotal.labsboot.injection;
 
 import org.junit.Test;
 
-import io.pivotal.labsboot.InjectionActivity;
 import io.pivotal.labsboot.TestAndroidBootApplication;
 
 import static org.mockito.Mockito.doReturn;

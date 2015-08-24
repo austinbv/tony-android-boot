@@ -7,6 +7,7 @@ import org.robolectric.RuntimeEnvironment;
 import dagger.Module;
 import dagger.Provides;
 import io.pivotal.labsboot.alkyhol.TestAlkyholModule;
+import io.pivotal.labsboot.injection.Injector;
 
 @Module(
         includes = {

@@ -1,14 +1,21 @@
 package io.pivotal.labsboot;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
 import io.pivotal.labsboot.alkyhol.AlkyholModule;
+import io.pivotal.labsboot.injection.Injector;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
@@ -32,24 +39,39 @@ public class ApplicationModule {
     }
 
     @Provides
+    ObjectMapper providesObjectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        return objectMapper;
+    }
+
+    @Provides
     RestAdapter providesRestAdapter(final ObjectMapper objectMapper) {
         return new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setConverter(new JacksonConverter(objectMapper))
-                .setEndpoint("http://192.168.1.141:8080")
+                .setEndpoint("http://192.168.1.130:8080")
                 .build();
     }
 
     @Provides
-    ObjectMapper providesObjectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
-        return objectMapper;
+    @Named("MainThread")
+    Handler providesMainThreadHandler() {
+        return new Handler(Looper.getMainLooper());
     }
 
     @Provides
     Injector providesInjector() {
         return mAndroidBootApplication;
+    }
+
+    @Provides
+    LayoutInflater providesLayoutInflater() {
+        return LayoutInflater.from(mAndroidBootApplication);
+    }
+
+    @Provides
+    RequestManager providesGlide(final Context context) {
+        return Glide.with(context);
     }
 }

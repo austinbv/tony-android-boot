@@ -1,6 +1,8 @@
 package io.pivotal.labsboot.alkyhol;
 
+import io.pivotal.labsboot.domain.AlkyholResponse;
 import retrofit.RestAdapter;
+import retrofit.http.EncodedPath;
 import retrofit.http.GET;
 
 class AlkyholApiClient {
@@ -10,12 +12,12 @@ class AlkyholApiClient {
         mAlkyholRetrofitService = restAdapter.create(AlkyholRetrofitService.class);
     }
 
-    public AlkyholResponse getAlkyhols() {
-        return mAlkyholRetrofitService.getAlkyhols();
+    public AlkyholResponse getAlkyhols(final String href) {
+        return mAlkyholRetrofitService.getAlkyhols(href);
     }
 
     interface AlkyholRetrofitService {
-        @GET("/products")
-        AlkyholResponse getAlkyhols();
+        @GET("{href}")
+        AlkyholResponse getAlkyhols(@EncodedPath("href") final String href);
     }
 }
