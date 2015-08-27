@@ -63,7 +63,7 @@ class AlkyholListAdapter extends BaseAdapter implements SuccessListener<List<Alk
             view.setTag(mViewHolderFactory.newViewHolder(view));
         }
 
-        return mAlkyholListPresenter.hydrateView(mAdapterHelper.getItem(this, position), view);
+        return mAlkyholListPresenter.hydrateView(getItem(position), view);
     }
 
     @Override

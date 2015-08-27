@@ -3,7 +3,6 @@ package io.pivotal.labsboot.alkyhol;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -83,10 +82,10 @@ public class AlkyholListAdapterTest {
     @Test
     public void getView() {
         final Alkyhol alkyhol = new Alkyhol();
+        adapter.onSuccess(asList(alkyhol));
         final View mockView = mock(View.class);
         final ViewGroup mockViewGroup = mock(ViewGroup.class);
         final AlkyholViewHolder mockViewHolder = mock(AlkyholViewHolder.class);
-        doReturn(alkyhol).when(mockAdapterHelper).getItem(any(BaseAdapter.class), anyInt());
         doReturn(mockViewHolder).when(mockViewHolderFactory).newViewHolder(any(View.class));
         doReturn(mockView).when(mockLayoutInflater).inflate(anyInt(), any(ViewGroup.class), anyBoolean());
         doReturn(mockView).when(mockAlkyholListPresenter).hydrateView(any(Alkyhol.class), any(View.class));
@@ -96,7 +95,6 @@ public class AlkyholListAdapterTest {
         verify(mockLayoutInflater).inflate(R.layout.list_item_alkyhol, mockViewGroup, false);
         verify(mockViewHolderFactory).newViewHolder(mockView);
         verify(mockView).setTag(mockViewHolder);
-        verify(mockAdapterHelper).getItem(adapter, 0);
         verify(mockAlkyholListPresenter).hydrateView(alkyhol, mockView);
 
         assertThat(actual).isEqualTo(mockView);
@@ -105,8 +103,8 @@ public class AlkyholListAdapterTest {
     @Test
     public void getView_recycles() {
         final Alkyhol alkyhol = new Alkyhol();
+        adapter.onSuccess(asList(alkyhol));
         final View mockView = mock(View.class);
-        doReturn(alkyhol).when(mockAdapterHelper).getItem(any(BaseAdapter.class), anyInt());
         adapter.getView(0, mockView, null);
 
         verify(mockAlkyholListPresenter).hydrateView(alkyhol, mockView);
