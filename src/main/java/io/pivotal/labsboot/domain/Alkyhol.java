@@ -11,6 +11,12 @@ public class Alkyhol {
     private Image image;
     private Container container;
 
+    public Alkyhol() {}
+
+    public Alkyhol(final Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -15,7 +15,6 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import io.pivotal.labsboot.alkyhol.AlkyholModule;
-import io.pivotal.labsboot.injection.Injector;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
@@ -27,15 +26,15 @@ import retrofit.converter.JacksonConverter;
     complete = false
 )
 public class ApplicationModule {
-    private AndroidBootApplication mAndroidBootApplication;
+    private AlkyholApplication mAlkyholApplication;
 
-    public ApplicationModule(final AndroidBootApplication application) {
-        mAndroidBootApplication = application;
+    public ApplicationModule(final AlkyholApplication application) {
+        mAlkyholApplication = application;
     }
 
     @Provides
     Context providesApplicationContext() {
-        return mAndroidBootApplication;
+        return mAlkyholApplication;
     }
 
     @Provides
@@ -61,13 +60,8 @@ public class ApplicationModule {
     }
 
     @Provides
-    Injector providesInjector() {
-        return mAndroidBootApplication;
-    }
-
-    @Provides
     LayoutInflater providesLayoutInflater() {
-        return LayoutInflater.from(mAndroidBootApplication);
+        return LayoutInflater.from(mAlkyholApplication);
     }
 
     @Provides

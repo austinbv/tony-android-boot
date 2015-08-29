@@ -4,25 +4,26 @@ import android.os.Handler;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Collections;
 import java.util.List;
 
 import io.pivotal.labsboot.domain.Alkyhol;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DelegateTest {
-    Handler mockHandler;
+    @Mock Handler mockHandler;
 
     TestDelegate delegate;
 
     @Before
     public void setup() {
-        mockHandler = mock(Handler.class);
         delegate = new TestDelegate(mockHandler);
     }
 
@@ -34,10 +35,9 @@ public class DelegateTest {
         delegate.registerSuccess(anotherSuccessListener);
         delegate.unregisterSuccess(successListener);
 
-        final List<Alkyhol> emptyList = Collections.EMPTY_LIST;
-        notifySuccessWith(emptyList);
-        assertThat(anotherSuccessListener.onSuccessWasCalledWith(emptyList)).isTrue();
-        assertThat(successListener.successWasNotCalled()).isTrue();
+        notifySuccessWith();
+        assertThat(anotherSuccessListener.onSuccessWasCalled()).isTrue();
+        assertThat(successListener.onSuccessWasCalled()).isFalse();
     }
 
     @Test
@@ -57,15 +57,14 @@ public class DelegateTest {
     public void notifySuccess() {
         final TestSuccessListener successListener = new TestSuccessListener();
         final TestSuccessListener anotherSuccessListener = new TestSuccessListener();
-        final List emptyList = Collections.EMPTY_LIST;
 
         delegate.registerSuccess(successListener);
         delegate.registerSuccess(anotherSuccessListener);
 
-        notifySuccessWith(emptyList);
+        notifySuccessWith();
 
-        assertThat(successListener.onSuccessWasCalledWith(emptyList)).isTrue();
-        assertThat(anotherSuccessListener.onSuccessWasCalledWith(emptyList)).isTrue();
+        assertThat(successListener.onSuccessWasCalled()).isTrue();
+        assertThat(anotherSuccessListener.onSuccessWasCalled()).isTrue();
     }
 
     @Test
@@ -81,8 +80,8 @@ public class DelegateTest {
         assertThat(anotherErrorListener.onErrorWasCalled()).isTrue();
     }
 
-    private void notifySuccessWith(final List<Alkyhol> emptyList) {
-        delegate.notifySuccess(emptyList);
+    private void notifySuccessWith() {
+        delegate.notifySuccess();
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(mockHandler).post(captor.capture());
@@ -100,19 +99,15 @@ public class DelegateTest {
     }
 
     static class TestSuccessListener implements SuccessListener<List<Alkyhol>> {
-        private List<Alkyhol> result;
+        private boolean called = false;
 
         @Override
-        public void onSuccess(final List<Alkyhol> result) {
-            this.result = result;
+        public void onSuccess() {
+            called = true;
         }
 
-        public boolean onSuccessWasCalledWith(final List<Alkyhol> expected) {
-            return expected.equals(result);
-        }
-
-        public boolean successWasNotCalled() {
-            return result == null;
+        public boolean onSuccessWasCalled() {
+            return called;
         }
     }
 
@@ -128,7 +123,6 @@ public class DelegateTest {
             return called;
         }
     }
-
 
     private static class TestDelegate extends Delegate {
         public TestDelegate(final Handler handler) {

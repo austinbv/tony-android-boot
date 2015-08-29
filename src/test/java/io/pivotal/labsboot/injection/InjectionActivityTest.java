@@ -2,24 +2,22 @@ package io.pivotal.labsboot.injection;
 
 import org.junit.Test;
 
-import io.pivotal.labsboot.TestAndroidBootApplication;
+import dagger.ObjectGraph;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class InjectionActivityTest {
 
     @Test
     public void inject() {
-        final InjectionActivity injectionActivity = spy(InjectionActivity.class);
-        final TestAndroidBootApplication mockApplication = mock(TestAndroidBootApplication.class);
+        final InjectionActivity activity = new InjectionActivity() {};
+        final ObjectGraph mockObjectGraph = mock(ObjectGraph.class);
+        ApplicationInjector.setGraph(mockObjectGraph);
         final Object mockObject = mock(Object.class);
-        doReturn(mockApplication).when(injectionActivity).getApplication();
 
-        injectionActivity.inject(mockObject);
+        activity.inject(mockObject);
 
-        verify(mockApplication).inject(mockObject);
+        verify(mockObjectGraph).inject(mockObject);
     }
 }

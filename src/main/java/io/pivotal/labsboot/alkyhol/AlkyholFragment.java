@@ -11,15 +11,16 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import io.pivotal.labsboot.framework.ErrorListener;
-import io.pivotal.labsboot.injection.InjectionFragment;
 import io.pivotal.labsboot.R;
+import io.pivotal.labsboot.framework.ErrorListener;
+import io.pivotal.labsboot.framework.SuccessListener;
+import io.pivotal.labsboot.injection.InjectionFragment;
 
-public class AlkyholListFragment extends InjectionFragment implements ErrorListener {
+public class AlkyholFragment extends InjectionFragment implements ErrorListener, SuccessListener {
     @Inject
-    protected AlkyholListDelegate mAlkyholListDelegate;
+    protected AlkyholDelegate mAlkyholDelegate;
     @Inject
-    protected AlkyholListAdapter mAlkyholListAdapter;
+    protected AlkyholAdapter mAlkyholAdapter;
 
     @Bind(R.id.fragment_alkyhollist_list_view)
     protected ListView mListView;
@@ -32,24 +33,29 @@ public class AlkyholListFragment extends InjectionFragment implements ErrorListe
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mListView.setAdapter(mAlkyholListAdapter);
+        mListView.setAdapter(mAlkyholAdapter);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        mAlkyholListDelegate.registerSuccess(mAlkyholListAdapter);
-        mAlkyholListDelegate.registerError(this);
-        mAlkyholListDelegate.getAlkyhols();
+        mAlkyholDelegate.registerSuccess(this);
+        mAlkyholDelegate.registerError(this);
+        mAlkyholDelegate.getAlkyhols();
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        mAlkyholListDelegate.unregisterSuccess(mAlkyholListAdapter);
-        mAlkyholListDelegate.unregisterError(this);
+        mAlkyholDelegate.unregisterSuccess(this);
+        mAlkyholDelegate.unregisterError(this);
+    }
+
+    @Override
+    public void onSuccess() {
+        Toast.makeText(getActivity(), "Request complete", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -59,7 +65,7 @@ public class AlkyholListFragment extends InjectionFragment implements ErrorListe
 
     public static class Factory {
         public Fragment newInstance() {
-            return new AlkyholListFragment();
+            return new AlkyholFragment();
         }
     }
 }

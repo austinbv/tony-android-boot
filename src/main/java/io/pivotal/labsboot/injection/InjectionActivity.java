@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 
 public abstract class InjectionActivity extends Activity implements Injector {
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -13,6 +12,6 @@ public abstract class InjectionActivity extends Activity implements Injector {
 
     @Override
     public void inject(final Object injectable) {
-        ((Injector) getApplication()).inject(injectable);
+        ApplicationInjector.inject(injectable);
     }
 }

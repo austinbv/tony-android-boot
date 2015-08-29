@@ -12,40 +12,45 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.pivotal.labsboot.domain.Alkyhol;
 import io.pivotal.labsboot.framework.AdapterHelper;
 import retrofit.RestAdapter;
 
 @Module(
         injects = {
             AlkyholActivity.class,
-            AlkyholListFragment.class,
-            AlkyholListDelegate.class
+            AlkyholFragment.class
         },
         library = true,
         complete = false
 )
 public class AlkyholModule {
     @Provides
-    @Singleton
-    AlkyholListDelegate providesDelegate(
+    AlkyholDelegate providesDelegate(
             final RestAdapter restAdapter,
-            @Named("MainThread") final Handler handler)
+            @Named("MainThread") final Handler handler,
+            final AlkyholDataSource alkyholDataSource)
     {
-        return new AlkyholListDelegate(Executors.newSingleThreadExecutor(), new AlkyholApiClient(restAdapter), handler);
+        return new AlkyholDelegate(Executors.newSingleThreadExecutor(), new AlkyholApiClient(restAdapter), alkyholDataSource, handler);
     }
 
     @Provides
-    AlkyholListFragment.Factory providesFragment() {
-        return new AlkyholListFragment.Factory();
+    @Singleton
+    AlkyholDataSource providesDataSource(@Named("MainThread") final Handler handler) {
+        return new AlkyholDataSource(handler);
     }
 
     @Provides
-    AlkyholListAdapter providesAdapter(
+    AlkyholFragment.Factory providesFragment() {
+        return new AlkyholFragment.Factory();
+    }
+
+    @Provides
+    AlkyholAdapter providesAdapter(
             final LayoutInflater layoutInflater,
             final RequestManager requestManager,
-            final AlkyholListDelegate alkyholListDelegate
+            final AlkyholDelegate alkyholDelegate,
+            final AlkyholDataSource alkyholDataSource
     ) {
-        return new AlkyholListAdapter(layoutInflater, new AlkyholViewHolder.Factory(), new AlkyholListPresenter(requestManager), alkyholListDelegate, new AdapterHelper<Alkyhol>());
+        return new AlkyholAdapter(layoutInflater, new AlkyholViewHolder.Factory(), new AlkyholPresenter(requestManager), alkyholDelegate, alkyholDataSource, new AdapterHelper());
     }
 }

@@ -12,7 +12,7 @@ import org.robolectric.util.FragmentTestUtil;
 import javax.inject.Inject;
 
 import io.pivotal.labsboot.BuildConfig;
-import io.pivotal.labsboot.injection.TestInjector;
+import io.pivotal.labsboot.injection.ApplicationInjector;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.inOrder;
@@ -20,24 +20,23 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants=BuildConfig.class)
-public class AlkyholListFragmentTest {
-
+public class AlkyholFragmentTest {
     @Inject
-    protected AlkyholListDelegate mockDelegate;
+    protected AlkyholDelegate mockDelegate;
     @Inject
-    protected AlkyholListAdapter testAdapter;
+    protected AlkyholAdapter testAdapter;
 
-    private AlkyholListFragment fragment;
+    private AlkyholFragment fragment;
 
     @Before
     public void setup() {
-        TestInjector.inject(this);
-        fragment = (AlkyholListFragment) new AlkyholListFragment.Factory().newInstance();
+        ApplicationInjector.inject(this);
+        fragment = (AlkyholFragment) new AlkyholFragment.Factory().newInstance();
     }
 
     @Test
     public void newInstance() {
-        assertThat(fragment).isInstanceOf(AlkyholListFragment.class);
+        assertThat(fragment).isInstanceOf(AlkyholFragment.class);
     }
 
     @Test
@@ -52,7 +51,7 @@ public class AlkyholListFragmentTest {
         FragmentTestUtil.startFragment(fragment);
 
         final InOrder inOrder = inOrder(mockDelegate);
-        inOrder.verify(mockDelegate).registerSuccess(testAdapter);
+        inOrder.verify(mockDelegate).registerSuccess(fragment);
         inOrder.verify(mockDelegate).registerError(fragment);
         inOrder.verify(mockDelegate).getAlkyhols();
     }
@@ -62,8 +61,17 @@ public class AlkyholListFragmentTest {
         FragmentTestUtil.startFragment(fragment);
         fragment.onStop();
 
-        verify(mockDelegate).unregisterSuccess(testAdapter);
+        verify(mockDelegate).unregisterSuccess(fragment);
         verify(mockDelegate).unregisterError(fragment);
+    }
+
+    @Test
+    public void onSuccess_createsToast() {
+        FragmentTestUtil.startFragment(fragment);
+
+        fragment.onSuccess();
+
+        assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo("Request complete");
     }
 
     @Test

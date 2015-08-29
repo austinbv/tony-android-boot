@@ -11,18 +11,21 @@ import io.pivotal.labsboot.domain.AlkyholResponse;
 import io.pivotal.labsboot.domain.Link;
 import retrofit.RetrofitError;
 
-class AlkyholListDelegate extends Delegate<List<Alkyhol>> {
+class AlkyholDelegate extends Delegate {
     public static final String DEFAULT_REQUEST = "alkyhols";
-    public static final int NEXT_PAGE_THRESHOLD = 3;
+
+    private volatile boolean mIsTaskCurrentlyRunning;
 
     private AlkyholResponse mLatestResponse;
-    private ExecutorService mExecutorService;
-    private AlkyholApiClient mAlkyholApiClient;
+    private final ExecutorService mExecutorService;
+    private final AlkyholApiClient mAlkyholApiClient;
+    private final AlkyholDataSource mAlkyholDataSource;
 
-    public AlkyholListDelegate(final ExecutorService executorService, final AlkyholApiClient alkyholApiClient, final Handler handler) {
+    public AlkyholDelegate(final ExecutorService executorService, final AlkyholApiClient alkyholApiClient, final AlkyholDataSource alkyholDataSource, final Handler handler) {
         super(handler);
         mExecutorService = executorService;
         mAlkyholApiClient = alkyholApiClient;
+        mAlkyholDataSource = alkyholDataSource;
     }
 
     public void getAlkyhols() {
@@ -30,22 +33,27 @@ class AlkyholListDelegate extends Delegate<List<Alkyhol>> {
     }
 
     private void getAlkyhols(final String href) {
+        mIsTaskCurrentlyRunning = true;
         mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     mLatestResponse = mAlkyholApiClient.getAlkyhols(href);
                     final List<Alkyhol> alkyhols = mLatestResponse.getAlkyhols();
-                    notifySuccess(alkyhols);
+                    notifySuccess();
+                    mAlkyholDataSource.addAlkyhols(alkyhols);
                 } catch (final RetrofitError error) {
                     notifyError();
                 }
+                mIsTaskCurrentlyRunning = false;
             }
         });
     }
 
     public void loadNextPage() {
-        final Link next = mLatestResponse.findLink("next");
-        getAlkyhols(next.getHref());
+        if (!mIsTaskCurrentlyRunning) {
+            final Link next = mLatestResponse.findLink("next");
+            getAlkyhols(next.getHref());
+        }
     }
 }

@@ -17,7 +17,7 @@ import io.pivotal.labsboot.domain.AlkyholResponse;
 import io.pivotal.labsboot.domain.Link;
 import retrofit.RetrofitError;
 
-import static io.pivotal.labsboot.alkyhol.AlkyholListDelegate.DEFAULT_REQUEST;
+import static io.pivotal.labsboot.alkyhol.AlkyholDelegate.DEFAULT_REQUEST;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -28,23 +28,24 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AlkyholListDelegateTest {
+public class AlkyholDelegateTest {
     @Mock ExecutorService mockExecutorService;
     @Mock AlkyholApiClient mockAlkyholApiClient;
+    @Mock AlkyholDataSource mockAlkyholDataSource;
     @Mock Handler mockHandler;
 
-    AlkyholListDelegate delegate;
+    AlkyholDelegate delegate;
 
     @Before
     public void setup() {
-        delegate = new AlkyholListDelegate(mockExecutorService, mockAlkyholApiClient, mockHandler);
+        delegate = new AlkyholDelegate(mockExecutorService, mockAlkyholApiClient, mockAlkyholDataSource, mockHandler);
     }
 
     @Test
     public void getAlkyhols_onSuccess() {
         final List<Alkyhol> alkyhols = singletonList(new Alkyhol());
         doReturn(new AlkyholResponse(alkyhols)).when(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
-        final AlkyholListDelegate spiedDelegate = spy(delegate);
+        final AlkyholDelegate spiedDelegate = spy(delegate);
         spiedDelegate.getAlkyhols();
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
@@ -54,13 +55,14 @@ public class AlkyholListDelegateTest {
         runnable.run();
 
         verify(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
-        verify(spiedDelegate).notifySuccess(alkyhols);
+        verify(spiedDelegate).notifySuccess();
+        verify(mockAlkyholDataSource).addAlkyhols(alkyhols);
     }
 
     @Test
     public void getAlkyhols_onFailure() {
         doThrow(mock(RetrofitError.class)).when(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
-        final AlkyholListDelegate spiedDelegate = spy(delegate);
+        final AlkyholDelegate spiedDelegate = spy(delegate);
         spiedDelegate.getAlkyhols();
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);

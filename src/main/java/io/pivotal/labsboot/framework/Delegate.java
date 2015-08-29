@@ -5,16 +5,16 @@ import android.os.Handler;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Delegate<TYPE> {
+public abstract class Delegate {
     private Handler mHandler;
     private Set<ErrorListener> mErrorListeners = new HashSet<>();
-    private Set<SuccessListener<TYPE>> mSuccessListeners = new HashSet<>();
+    private Set<SuccessListener> mSuccessListeners = new HashSet<>();
 
     public Delegate (final Handler handler) {
         mHandler = handler;
     }
 
-    public void registerSuccess(final SuccessListener<TYPE> successListener) {
+    public void registerSuccess(final SuccessListener successListener) {
         mSuccessListeners.add(successListener);
     }
 
@@ -22,7 +22,7 @@ public abstract class Delegate<TYPE> {
         mErrorListeners.add(errorListener);
     }
 
-    public void unregisterSuccess(final SuccessListener<TYPE> successListener) {
+    public void unregisterSuccess(final SuccessListener successListener) {
         mSuccessListeners.remove(successListener);
     }
 
@@ -30,12 +30,12 @@ public abstract class Delegate<TYPE> {
         mErrorListeners.remove(errorListener);
     }
 
-    public void notifySuccess(final TYPE result) {
+    public void notifySuccess() {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                for (final SuccessListener<TYPE> listener : mSuccessListeners) {
-                    listener.onSuccess(result);
+                for (final SuccessListener listener : mSuccessListeners) {
+                    listener.onSuccess();
                 }
             }
         });

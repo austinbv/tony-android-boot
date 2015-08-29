@@ -5,45 +5,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.pivotal.labsboot.R;
 import io.pivotal.labsboot.domain.Alkyhol;
 import io.pivotal.labsboot.framework.AdapterHelper;
-import io.pivotal.labsboot.framework.SuccessListener;
+import io.pivotal.labsboot.framework.DataSetChangeListener;
 
-class AlkyholListAdapter extends BaseAdapter implements SuccessListener<List<Alkyhol>> {
-    private List<Alkyhol> mAlkyhols;
+class AlkyholAdapter extends BaseAdapter implements DataSetChangeListener {
     private LayoutInflater mLayoutInflater;
-    private AdapterHelper<Alkyhol> mAdapterHelper;
-    private AlkyholListDelegate mAlkyholListDelegate;
-    private AlkyholListPresenter mAlkyholListPresenter;
+    private AdapterHelper mAdapterHelper;
+    private AlkyholDelegate mAlkyholDelegate;
+    private AlkyholDataSource mAlkyholDataSource;
+    private AlkyholPresenter mAlkyholPresenter;
     private AlkyholViewHolder.Factory mViewHolderFactory;
 
-    public AlkyholListAdapter(
+    public AlkyholAdapter(
             final LayoutInflater layoutInflater,
             final AlkyholViewHolder.Factory viewHolderFactory,
-            final AlkyholListPresenter alkyholListPresenter,
-            final AlkyholListDelegate alkyholListDelegate,
-            final AdapterHelper<Alkyhol> adapterHelper
+            final AlkyholPresenter alkyholPresenter,
+            final AlkyholDelegate alkyholDelegate,
+            final AlkyholDataSource alkyholDataSource,
+            final AdapterHelper adapterHelper
     ) {
         mLayoutInflater = layoutInflater;
         mViewHolderFactory = viewHolderFactory;
-        mAlkyholListPresenter = alkyholListPresenter;
-        mAlkyholListDelegate = alkyholListDelegate;
+        mAlkyholPresenter = alkyholPresenter;
+        mAlkyholDelegate = alkyholDelegate;
+        mAlkyholDataSource = alkyholDataSource;
         mAdapterHelper = adapterHelper;
-        mAlkyhols = new ArrayList<>();
+        alkyholDataSource.registerDataSetChangeLisener(this);
     }
 
     @Override
     public int getCount() {
-        return mAlkyhols.size();
+        return mAlkyholDataSource.size();
     }
 
     @Override
     public Alkyhol getItem(final int position) {
-        return mAlkyhols.get(position);
+        return mAlkyholDataSource.getAlkyhol(position);
     }
 
     @Override
@@ -53,8 +52,8 @@ class AlkyholListAdapter extends BaseAdapter implements SuccessListener<List<Alk
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
-        if (position == mAlkyhols.size() - AlkyholListDelegate.NEXT_PAGE_THRESHOLD) {
-            mAlkyholListDelegate.loadNextPage();
+        if (mAlkyholDataSource.nearEndOfData(position)) {
+            mAlkyholDelegate.loadNextPage();
         }
 
         View view = convertView;
@@ -63,13 +62,11 @@ class AlkyholListAdapter extends BaseAdapter implements SuccessListener<List<Alk
             view.setTag(mViewHolderFactory.newViewHolder(view));
         }
 
-        return mAlkyholListPresenter.hydrateView(getItem(position), view);
+        return mAlkyholPresenter.hydrateView(getItem(position), view);
     }
 
     @Override
-    public void onSuccess(final List<Alkyhol> result) {
-        mAlkyhols.addAll(result);
+    public void onDataSetChanged() {
         mAdapterHelper.notifyDataSetChanged(this);
     }
-
 }

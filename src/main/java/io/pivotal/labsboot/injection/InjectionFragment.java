@@ -8,13 +8,9 @@ import android.view.View;
 import butterknife.ButterKnife;
 
 public abstract class InjectionFragment extends Fragment implements Injector {
-
-    private Injector mInjector;
-
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
-        mInjector = (Injector) activity.getApplication();
         inject(this);
     }
 
@@ -26,6 +22,6 @@ public abstract class InjectionFragment extends Fragment implements Injector {
 
     @Override
     public void inject(final Object injectable) {
-        mInjector.inject(injectable);
+        ApplicationInjector.inject(injectable);
     }
 }

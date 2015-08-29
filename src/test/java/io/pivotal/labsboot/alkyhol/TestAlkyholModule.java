@@ -5,18 +5,15 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 @Module(
         injects = {
                 AlkyholActivity.class,
                 AlkyholActivityTest.class,
-                AlkyholListFragment.class,
-                AlkyholListFragmentTest.class,
-                AlkyholListDelegate.class,
-                AlkyholListDelegateTest.class
+                AlkyholFragment.class,
+                AlkyholFragmentTest.class
         },
         library = true,
         complete = false,
@@ -25,21 +22,21 @@ import static org.mockito.Mockito.spy;
 public class TestAlkyholModule {
     @Provides
     @Singleton
-    AlkyholListDelegate providesDelegate() {
-        return mock(AlkyholListDelegate.class);
+    AlkyholDelegate providesDelegate() {
+        return mock(AlkyholDelegate.class);
     }
 
     @Provides
     @Singleton
-    AlkyholListFragment.Factory providesFragment() {
-        return mock(AlkyholListFragment.Factory.class);
+    AlkyholFragment.Factory providesFragment() {
+        return mock(AlkyholFragment.Factory.class);
     }
 
     @Provides
     @Singleton
-    AlkyholListAdapter providesAdapter() {
-        final TestAdapter testAdapter = spy(new TestAdapter());
-        doNothing().when(testAdapter).notifyDataSetChanged();
-        return testAdapter;
+    AlkyholAdapter providesAdapter() {
+        final AlkyholAdapter mockAdapter = mock(AlkyholAdapter.class);
+        doReturn(1).when(mockAdapter).getViewTypeCount();
+        return mockAdapter;
     }
 }

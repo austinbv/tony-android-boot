@@ -7,10 +7,10 @@ import com.bumptech.glide.RequestManager;
 import io.pivotal.labsboot.domain.Alkyhol;
 import io.pivotal.labsboot.domain.Container;
 
-class AlkyholListPresenter {
+class AlkyholPresenter {
     private final RequestManager mRequestManager;
 
-    public AlkyholListPresenter(final RequestManager requestManager) {
+    public AlkyholPresenter(final RequestManager requestManager) {
         mRequestManager = requestManager;
     }
 

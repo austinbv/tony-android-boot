@@ -35,7 +35,7 @@ public class AlkyholPresenterTest {
     @Mock private ImageView mockImageView;
     @Mock private View mockView;
 
-    private AlkyholListPresenter alkyholListPresenter;
+    private AlkyholPresenter mAlkyholPresenter;
 
     @Before
     public void before() {
@@ -49,7 +49,7 @@ public class AlkyholPresenterTest {
         mockAlkyholViewHolder.container = mockContainerView;
         mockAlkyholViewHolder.image = mockImageView;
 
-        alkyholListPresenter = new AlkyholListPresenter(mockRequestManager);
+        mAlkyholPresenter = new AlkyholPresenter(mockRequestManager);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class AlkyholPresenterTest {
         alkyhol.setContainer(container);
         alkyhol.setImage(image);
 
-        alkyholListPresenter.hydrateView(alkyhol, mockView);
+        mAlkyholPresenter.hydrateView(alkyhol, mockView);
 
         verify(mockNameView).setText("Coors Light");
         verify(mockPriceView).setText("$4.25");

@@ -9,7 +9,7 @@ import io.pivotal.labsboot.R;
 
 public class AlkyholActivity extends InjectionActivity {
     @Inject
-    protected AlkyholListFragment.Factory mFragmentFactory;
+    protected AlkyholFragment.Factory mFragmentFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
