@@ -20,7 +20,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants=BuildConfig.class)
+@Config(constants=BuildConfig.class, emulateSdk = 21)
 public class AlkyholActivityTest {
     @Inject
     protected AlkyholFragment.Factory mockAlkyholFragmentFactory;

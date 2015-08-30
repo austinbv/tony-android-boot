@@ -2,10 +2,12 @@ package io.pivotal.labsboot.alkyhol;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import javax.inject.Inject;
@@ -22,8 +24,8 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     @Inject
     protected AlkyholAdapter mAlkyholAdapter;
 
-    @Bind(R.id.fragment_alkyhollist_list_view)
-    protected ListView mListView;
+    @Bind(R.id.fragment_alkyhol_recycler_view)
+    protected RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -33,7 +35,9 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mListView.setAdapter(mAlkyholAdapter);
+        mRecyclerView.setAdapter(mAlkyholAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     @Override

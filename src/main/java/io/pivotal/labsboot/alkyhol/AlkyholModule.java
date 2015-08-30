@@ -25,6 +25,7 @@ import retrofit.RestAdapter;
 )
 public class AlkyholModule {
     @Provides
+    @Singleton
     AlkyholDelegate providesDelegate(
             final RestAdapter restAdapter,
             @Named("MainThread") final Handler handler,

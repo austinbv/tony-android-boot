@@ -14,7 +14,6 @@ import io.pivotal.labsboot.R;
 import io.pivotal.labsboot.domain.Alkyhol;
 import io.pivotal.labsboot.framework.AdapterHelper;
 
-import static org.fest.assertions.api.ANDROID.assertThat;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -60,50 +59,33 @@ public class AlkyholAdapterTest {
         verify(mockAdapterHelper).notifyDataSetChanged(adapter);
     }
 
-    @Test
-    public void getItem() {
-        assertThat(adapter.getItem(0)).isEqualTo(new Alkyhol(1));
-        assertThat(adapter.getItem(1)).isEqualTo(new Alkyhol(2));
-    }
 
     @Test
-    public void getItemId() {
-        assertThat(adapter.getItemId(0)).isEqualTo(0);
-        assertThat(adapter.getItemId(1)).isEqualTo(1);
-    }
-
-    @Test
-    public void getView() {
+    public void onCreateViewHolder() {
         final View mockView = mock(View.class);
         final ViewGroup mockViewGroup = mock(ViewGroup.class);
         final AlkyholViewHolder mockViewHolder = mock(AlkyholViewHolder.class);
         doReturn(mockViewHolder).when(mockViewHolderFactory).newViewHolder(any(View.class));
         doReturn(mockView).when(mockLayoutInflater).inflate(anyInt(), any(ViewGroup.class), anyBoolean());
-        doReturn(mockView).when(mMockAlkyholPresenter).hydrateView(any(Alkyhol.class), any(View.class));
-
-        final View actual = adapter.getView(0, null, mockViewGroup);
-
-        verify(mockLayoutInflater).inflate(R.layout.list_item_alkyhol, mockViewGroup, false);
+        assertThat(adapter.onCreateViewHolder(mockViewGroup, 0)).isEqualTo(mockViewHolder);
         verify(mockViewHolderFactory).newViewHolder(mockView);
-        verify(mockView).setTag(mockViewHolder);
-        verify(mMockAlkyholPresenter).hydrateView(new Alkyhol(1), mockView);
-
-        assertThat(actual).isEqualTo(mockView);
+        verify(mockLayoutInflater).inflate(R.layout.list_item_alkyhol, mockViewGroup, false);
     }
 
     @Test
-    public void getView_recycles() {
-        final View mockView = mock(View.class);
-        adapter.getView(0, mockView, null);
+    public void onBindViewHolder() {
+        final AlkyholViewHolder mockViewHolder = mock(AlkyholViewHolder.class);
 
-        verify(mMockAlkyholPresenter).hydrateView(new Alkyhol(1), mockView);
+        adapter.bindViewHolder(mockViewHolder, 0);
+
+        verify(mMockAlkyholPresenter).hydrateView(mockViewHolder, new Alkyhol(1));
     }
 
     @Test
     public void getViewThreeFromEnd_makesRequestForNextPage() {
         doReturn(true).when(mockAlkyholDataSource).nearEndOfData(anyInt());
 
-        adapter.getView(0, mock(View.class), null);
+        adapter.onBindViewHolder(null, 0);
 
         verify(mockAlkyholDataSource).nearEndOfData(0);
         verify(mockAlkyholDelegate).loadNextPage();

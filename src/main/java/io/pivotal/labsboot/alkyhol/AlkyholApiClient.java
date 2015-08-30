@@ -17,7 +17,7 @@ class AlkyholApiClient {
     }
 
     interface AlkyholRetrofitService {
-        @GET("{href}")
+        @GET("/{href}")
         AlkyholResponse getAlkyhols(@EncodedPath("href") final String href);
     }
 }

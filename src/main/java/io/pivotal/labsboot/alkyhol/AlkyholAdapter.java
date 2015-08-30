@@ -1,16 +1,14 @@
 package io.pivotal.labsboot.alkyhol;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import io.pivotal.labsboot.R;
-import io.pivotal.labsboot.domain.Alkyhol;
 import io.pivotal.labsboot.framework.AdapterHelper;
 import io.pivotal.labsboot.framework.DataSetChangeListener;
 
-class AlkyholAdapter extends BaseAdapter implements DataSetChangeListener {
+class AlkyholAdapter extends RecyclerView.Adapter<AlkyholViewHolder> implements DataSetChangeListener {
     private LayoutInflater mLayoutInflater;
     private AdapterHelper mAdapterHelper;
     private AlkyholDelegate mAlkyholDelegate;
@@ -36,35 +34,23 @@ class AlkyholAdapter extends BaseAdapter implements DataSetChangeListener {
     }
 
     @Override
-    public int getCount() {
-        return mAlkyholDataSource.size();
+    public AlkyholViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        return mViewHolderFactory.newViewHolder(mLayoutInflater.inflate(R.layout.list_item_alkyhol, parent, false));
     }
 
     @Override
-    public Alkyhol getItem(final int position) {
-        return mAlkyholDataSource.getAlkyhol(position);
-    }
-
-    @Override
-    public long getItemId(final int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    public void onBindViewHolder(final AlkyholViewHolder holder, final int position) {
         if (mAlkyholDataSource.nearEndOfData(position)) {
             mAlkyholDelegate.loadNextPage();
         }
-
-        View view = convertView;
-        if (view == null) {
-            view = mLayoutInflater.inflate(R.layout.list_item_alkyhol, parent, false);
-            view.setTag(mViewHolderFactory.newViewHolder(view));
-        }
-
-        return mAlkyholPresenter.hydrateView(getItem(position), view);
+        mAlkyholPresenter.hydrateView(holder, mAlkyholDataSource.getAlkyhol(position));
     }
 
+    @Override
+    public int getItemCount() {
+        return mAlkyholDataSource.size();
+    }
+    
     @Override
     public void onDataSetChanged() {
         mAdapterHelper.notifyDataSetChanged(this);

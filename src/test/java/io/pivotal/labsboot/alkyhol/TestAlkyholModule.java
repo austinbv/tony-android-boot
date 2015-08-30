@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 @Module(
@@ -35,8 +34,6 @@ public class TestAlkyholModule {
     @Provides
     @Singleton
     AlkyholAdapter providesAdapter() {
-        final AlkyholAdapter mockAdapter = mock(AlkyholAdapter.class);
-        doReturn(1).when(mockAdapter).getViewTypeCount();
-        return mockAdapter;
+        return mock(AlkyholAdapter.class);
     }
 }

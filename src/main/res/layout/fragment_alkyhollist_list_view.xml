@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
-    <ListView
-        android:id="@+id/fragment_alkyhollist_list_view"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_alkyhol_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="15dp"
-        android:scrollbarStyle="outsideInset"
+        android:scrollbars="vertical"
         android:clipToPadding="false"
         tools:listitem="@layout/list_item_alkyhol"/>
 </LinearLayout>

@@ -36,6 +36,6 @@ class AlkyholDataSource extends DataSource {
     }
 
     public boolean nearEndOfData(final int index) {
-        return index == (size() - mDataEndThreshold);
+        return size() > 0 && index == (size() - mDataEndThreshold);
     }
 }

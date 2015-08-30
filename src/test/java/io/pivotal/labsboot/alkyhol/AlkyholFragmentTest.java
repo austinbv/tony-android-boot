@@ -19,7 +19,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants=BuildConfig.class)
+@Config(constants=BuildConfig.class, emulateSdk = 21)
 public class AlkyholFragmentTest {
     @Inject
     protected AlkyholDelegate mockDelegate;
@@ -43,7 +43,7 @@ public class AlkyholFragmentTest {
     public void onCreation_addsAdapter() {
         FragmentTestUtil.startFragment(fragment);
 
-        assertThat(fragment.mListView.getAdapter()).isEqualTo(testAdapter);
+        assertThat(fragment.mRecyclerView.getAdapter()).isEqualTo(testAdapter);
     }
 
     @Test
