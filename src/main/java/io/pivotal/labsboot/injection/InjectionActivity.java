@@ -1,13 +1,21 @@
 package io.pivotal.labsboot.injection;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public abstract class InjectionActivity extends Activity implements Injector {
+import butterknife.ButterKnife;
+
+public abstract class InjectionActivity extends AppCompatActivity implements Injector {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inject(this);
+    }
+
+    @Override
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        ButterKnife.bind(this);
     }
 
     @Override

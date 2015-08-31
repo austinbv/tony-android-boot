@@ -2,13 +2,13 @@ package io.pivotal.labsboot.alkyhol;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -24,8 +24,7 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     @Inject
     protected AlkyholAdapter mAlkyholAdapter;
 
-    @Bind(R.id.fragment_alkyhol_recycler_view)
-    protected RecyclerView mRecyclerView;
+    @Bind(R.id.fragment_alkyhol_recycler_view) protected RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -35,6 +34,7 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mRecyclerView.setAdapter(mAlkyholAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -59,12 +59,12 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
 
     @Override
     public void onSuccess() {
-        Toast.makeText(getActivity(), "Request complete", Toast.LENGTH_SHORT).show();
+        Snackbar.make(getView(), "Request complete", Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void onError() {
-        Toast.makeText(getActivity(), "There has been an error", Toast.LENGTH_LONG).show();
+        Snackbar.make(getView(), "There has been an error", Snackbar.LENGTH_LONG).show();
     }
 
     public static class Factory {

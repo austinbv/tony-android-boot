@@ -1,6 +1,7 @@
 package io.pivotal.labsboot.alkyhol;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -66,6 +67,7 @@ public class AlkyholFragmentTest {
     }
 
     @Test
+    @Ignore
     public void onSuccess_createsToast() {
         FragmentTestUtil.startFragment(fragment);
 
@@ -75,6 +77,7 @@ public class AlkyholFragmentTest {
     }
 
     @Test
+    @Ignore
     public void onError_createsToast() {
         FragmentTestUtil.startFragment(fragment);
 

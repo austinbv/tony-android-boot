@@ -6,7 +6,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application android:name=".AlkyholApplication">
+    <application android:name=".AlkyholApplication" android:theme="@style/AppTheme">
         <activity android:name=".alkyhol.AlkyholActivity" android:screenOrientation="portrait" android:label="Alkyhol Application">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -9,8 +9,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import io.pivotal.labsboot.domain.Alkyhol;
+import io.pivotal.labsboot.domain.AlkyholResponse;
+import io.pivotal.labsboot.domain.Link;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static java.util.Collections.singletonList;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -27,9 +30,9 @@ public class AlkyholDataSourceTest {
     public void setup() {
         empty = new AlkyholDataSource(mockHandler);
         one = new AlkyholDataSource(mockHandler);
-        one.addAlkyhols(singletonList(new Alkyhol(1)));
+        one.addAlkyholResponse(new AlkyholResponse(singletonList(new Alkyhol(1))));
         many = new AlkyholDataSource(mockHandler);
-        many.addAlkyhols(asList(new Alkyhol(2), new Alkyhol(3)));
+        many.addAlkyholResponse(new AlkyholResponse(asList(new Alkyhol(2), new Alkyhol(3))));
     }
 
     @Test
@@ -42,8 +45,19 @@ public class AlkyholDataSourceTest {
     @Test
     public void addAlkyhols_notifiesListeners() {
         final AlkyholDataSource spiedDataSource = spy(many);
-        spiedDataSource.addAlkyhols(asList(new Alkyhol(4), new Alkyhol(5)));
+
+        spiedDataSource.addAlkyholResponse(new AlkyholResponse());
+
         verify(spiedDataSource).notifyDataSetChanged();
+    }
+
+    @Test
+    public void getNextPageLink() {
+        final AlkyholDataSource dataSource = new AlkyholDataSource(mockHandler);
+
+        dataSource.addAlkyholResponse(new AlkyholResponse(EMPTY_LIST, singletonList(new Link("next", "nextPageUrl"))));
+
+        assertThat(dataSource.getNextPageLink()).isEqualTo("nextPageUrl");
     }
 
     @Test
@@ -56,7 +70,7 @@ public class AlkyholDataSourceTest {
     @Test
     public void nearEndOfData() {
         final AlkyholDataSource alkyholDataSource = new AlkyholDataSource(mockHandler, 1);
-        alkyholDataSource.addAlkyhols(asList(new Alkyhol(1), new Alkyhol(2), new Alkyhol(3)));
+        alkyholDataSource.addAlkyholResponse(new AlkyholResponse(asList(new Alkyhol(1), new Alkyhol(2), new Alkyhol(3))));
 
         assertThat(alkyholDataSource.nearEndOfData(0)).isFalse();
         assertThat(alkyholDataSource.nearEndOfData(1)).isFalse();

@@ -1,15 +1,16 @@
 package io.pivotal.labsboot.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlkyholResponse {
     private List<Alkyhol> alkyhols;
     private List<Link> links;
 
-    public AlkyholResponse() {this(null);}
+    public AlkyholResponse() {this(new ArrayList<Alkyhol>());}
 
     public AlkyholResponse(final List<Alkyhol> alkyhols) {
-        this(alkyhols, null);
+        this(alkyhols, new ArrayList<Link>());
     }
 
     public AlkyholResponse(final List<Alkyhol> alkyhols, final List<Link> links) {
