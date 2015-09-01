@@ -1,13 +1,13 @@
 package io.pivotal.labsboot.alkyhol;
 
+import android.support.design.widget.Snackbar;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.FragmentTestUtil;
 
 import javax.inject.Inject;
@@ -31,6 +31,7 @@ public class AlkyholFragmentTest {
 
     @Before
     public void setup() {
+        Snackbar.reset();
         ApplicationInjector.inject(this);
         fragment = (AlkyholFragment) new AlkyholFragment.Factory().newInstance();
     }
@@ -67,22 +68,22 @@ public class AlkyholFragmentTest {
     }
 
     @Test
-    @Ignore
     public void onSuccess_createsToast() {
         FragmentTestUtil.startFragment(fragment);
 
         fragment.onSuccess();
 
-        assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo("Request complete");
+        assertThat(Snackbar.verifyMakeWith(fragment.getView(), "Request complete", Snackbar.LENGTH_LONG)).isTrue();
+        assertThat(Snackbar.verifyShowCalled()).isTrue();
     }
 
     @Test
-    @Ignore
     public void onError_createsToast() {
         FragmentTestUtil.startFragment(fragment);
 
         fragment.onError();
 
-        assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo("There has been an error");
+        assertThat(Snackbar.verifyMakeWith(fragment.getView(), "There has been an error", Snackbar.LENGTH_LONG)).isTrue();
+        assertThat(Snackbar.verifyShowCalled()).isTrue();
     }
 }
