@@ -1,4 +1,4 @@
-package io.pivotal.labsboot.injection;
+package io.pivotal.labsboot.framework;
 
 import dagger.ObjectGraph;
 

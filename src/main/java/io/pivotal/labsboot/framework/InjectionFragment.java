@@ -1,4 +1,4 @@
-package io.pivotal.labsboot.injection;
+package io.pivotal.labsboot.framework;
 
 import android.app.Activity;
 import android.app.Fragment;

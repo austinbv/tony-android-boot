@@ -3,7 +3,7 @@ package io.pivotal.labsboot;
 import android.app.Application;
 
 import dagger.ObjectGraph;
-import io.pivotal.labsboot.injection.ApplicationInjector;
+import io.pivotal.labsboot.framework.ApplicationInjector;
 
 public class AlkyholApplication extends Application {
     @Override

@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 import io.pivotal.labsboot.BuildConfig;
 import io.pivotal.labsboot.R;
-import io.pivotal.labsboot.injection.ApplicationInjector;
+import io.pivotal.labsboot.framework.ApplicationInjector;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;

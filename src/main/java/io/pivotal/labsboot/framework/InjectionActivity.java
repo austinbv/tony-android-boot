@@ -1,4 +1,4 @@
-package io.pivotal.labsboot.injection;
+package io.pivotal.labsboot.framework;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

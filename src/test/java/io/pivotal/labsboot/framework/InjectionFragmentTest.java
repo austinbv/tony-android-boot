@@ -1,8 +1,10 @@
-package io.pivotal.labsboot.injection;
+package io.pivotal.labsboot.framework;
 
 import org.junit.Test;
 
 import dagger.ObjectGraph;
+import io.pivotal.labsboot.framework.ApplicationInjector;
+import io.pivotal.labsboot.framework.InjectionFragment;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

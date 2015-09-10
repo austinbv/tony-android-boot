@@ -16,7 +16,7 @@ import butterknife.Bind;
 import io.pivotal.labsboot.R;
 import io.pivotal.labsboot.framework.ErrorListener;
 import io.pivotal.labsboot.framework.SuccessListener;
-import io.pivotal.labsboot.injection.InjectionFragment;
+import io.pivotal.labsboot.framework.InjectionFragment;
 
 public class AlkyholFragment extends InjectionFragment implements ErrorListener, SuccessListener {
     @Inject

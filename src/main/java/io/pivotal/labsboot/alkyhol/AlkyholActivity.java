@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import io.pivotal.labsboot.R;
-import io.pivotal.labsboot.injection.InjectionActivity;
+import io.pivotal.labsboot.framework.InjectionActivity;
 
 public class AlkyholActivity extends InjectionActivity {
     @Inject
