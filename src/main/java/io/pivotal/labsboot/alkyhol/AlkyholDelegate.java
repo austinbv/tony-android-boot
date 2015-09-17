@@ -23,17 +23,17 @@ class AlkyholDelegate extends Delegate {
         mAlkyholDataSource = alkyholDataSource;
     }
 
-    public void getAlkyhols() {
-        getAlkyhols(DEFAULT_REQUEST);
+    public void getAlkyhols(final String type) {
+        getAlkyhols(type, DEFAULT_REQUEST);
     }
 
-    private void getAlkyhols(final String href) {
+    private void getAlkyhols(final String type, final String href) {
         mIsTaskCurrentlyRunning = true;
         mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
-                try {;
-                    mAlkyholDataSource.addAlkyholResponse(mAlkyholApiClient.getAlkyhols(href));
+                try {
+                    mAlkyholDataSource.addAlkyholResponse(mAlkyholApiClient.getAlkyhols(type, href));
                     notifySuccess();
                 } catch (final RetrofitError error) {
                     notifyError();
@@ -43,9 +43,9 @@ class AlkyholDelegate extends Delegate {
         });
     }
 
-    public void loadNextPage() {
+    public void loadNextPage(final String type) {
         if (!mIsTaskCurrentlyRunning) {
-            getAlkyhols(mAlkyholDataSource.getNextPageLink());
+            getAlkyhols(type, mAlkyholDataSource.getNextPageLink());
         }
     }
 }

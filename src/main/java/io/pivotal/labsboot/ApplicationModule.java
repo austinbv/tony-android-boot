@@ -49,7 +49,7 @@ public class ApplicationModule {
         return new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setConverter(new JacksonConverter(objectMapper))
-                .setEndpoint("http://192.168.96.88:8080")
+                .setEndpoint("http://alkyhols.cfapps.io")
                 .build();
     }
 

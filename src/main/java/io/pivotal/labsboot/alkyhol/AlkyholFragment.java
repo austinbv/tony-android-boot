@@ -15,8 +15,8 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import io.pivotal.labsboot.R;
 import io.pivotal.labsboot.framework.ErrorListener;
-import io.pivotal.labsboot.framework.SuccessListener;
 import io.pivotal.labsboot.framework.InjectionFragment;
+import io.pivotal.labsboot.framework.SuccessListener;
 
 public class AlkyholFragment extends InjectionFragment implements ErrorListener, SuccessListener {
     @Inject
@@ -25,6 +25,14 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     protected AlkyholAdapter mAlkyholAdapter;
 
     @Bind(R.id.fragment_alkyhol_recycler_view) protected RecyclerView mRecyclerView;
+
+    private String mType;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mType = getArguments().getString(Args.TYPE);
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -35,6 +43,7 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAlkyholAdapter.setType(mType);
         mRecyclerView.setAdapter(mAlkyholAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -46,7 +55,7 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
 
         mAlkyholDelegate.registerSuccess(this);
         mAlkyholDelegate.registerError(this);
-        mAlkyholDelegate.getAlkyhols();
+        mAlkyholDelegate.getAlkyhols(mType);
     }
 
     @Override
@@ -68,8 +77,18 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     }
 
     public static class Factory {
-        public Fragment newInstance() {
-            return new AlkyholFragment();
+        public Fragment newInstance(final String type) {
+            final AlkyholFragment fragment = new AlkyholFragment();
+
+            final Bundle bundle = new Bundle();
+            bundle.putString(Args.TYPE, type);
+            fragment.setArguments(bundle);
+
+            return fragment;
         }
+    }
+
+    public interface Args {
+        String TYPE = "type";
     }
 }

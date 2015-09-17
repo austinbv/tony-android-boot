@@ -15,6 +15,7 @@ class AlkyholAdapter extends RecyclerView.Adapter<AlkyholViewHolder> implements 
     private AlkyholDataSource mAlkyholDataSource;
     private AlkyholPresenter mAlkyholPresenter;
     private AlkyholViewHolder.Factory mViewHolderFactory;
+    private String mType;
 
     public AlkyholAdapter(
             final LayoutInflater layoutInflater,
@@ -41,7 +42,7 @@ class AlkyholAdapter extends RecyclerView.Adapter<AlkyholViewHolder> implements 
     @Override
     public void onBindViewHolder(final AlkyholViewHolder holder, final int position) {
         if (mAlkyholDataSource.nearEndOfData(position)) {
-            mAlkyholDelegate.loadNextPage();
+            mAlkyholDelegate.loadNextPage(mType);
         }
         mAlkyholPresenter.hydrateView(holder, mAlkyholDataSource.getAlkyhol(position));
     }
@@ -50,9 +51,13 @@ class AlkyholAdapter extends RecyclerView.Adapter<AlkyholViewHolder> implements 
     public int getItemCount() {
         return mAlkyholDataSource.size();
     }
-    
+
     @Override
     public void onDataSetChanged() {
         mAdapterHelper.notifyDataSetChanged(this);
+    }
+
+    public void setType(String type) {
+        mType = type;
     }
 }

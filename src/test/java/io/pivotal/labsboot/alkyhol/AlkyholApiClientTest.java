@@ -23,7 +23,7 @@ public class AlkyholApiClientTest {
         doReturn(mockService).when(mockRestAdapter).create(any(Class.class));
         final AlkyholApiClient apiClient = new AlkyholApiClient(mockRestAdapter);
 
-        assertThat(apiClient.getAlkyhols("/alkyhols")).isEqualTo(expected);
+        assertThat(apiClient.getAlkyhols("testType", "/alkyhols")).isEqualTo(expected);
         verify(mockRestAdapter).create(AlkyholApiClient.AlkyholRetrofitService.class);
         verify(mockService).getAlkyhols("/alkyhols");
     }

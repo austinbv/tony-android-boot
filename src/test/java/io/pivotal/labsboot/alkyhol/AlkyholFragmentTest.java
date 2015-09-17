@@ -33,18 +33,20 @@ public class AlkyholFragmentTest {
     public void setup() {
         Snackbar.reset();
         ApplicationInjector.inject(this);
-        fragment = (AlkyholFragment) new AlkyholFragment.Factory().newInstance();
+        fragment = (AlkyholFragment) new AlkyholFragment.Factory().newInstance("testValue");
     }
 
     @Test
     public void newInstance() {
         assertThat(fragment).isInstanceOf(AlkyholFragment.class);
+        assertThat(fragment.getArguments().getString(AlkyholFragment.Args.TYPE)).isEqualTo("testValue");
     }
 
     @Test
     public void onCreation_addsAdapter() {
         FragmentTestUtil.startFragment(fragment);
 
+        verify(testAdapter).setType("testValue");
         assertThat(fragment.mRecyclerView.getAdapter()).isEqualTo(testAdapter);
     }
 
@@ -55,7 +57,7 @@ public class AlkyholFragmentTest {
         final InOrder inOrder = inOrder(mockDelegate);
         inOrder.verify(mockDelegate).registerSuccess(fragment);
         inOrder.verify(mockDelegate).registerError(fragment);
-        inOrder.verify(mockDelegate).getAlkyhols();
+        inOrder.verify(mockDelegate).getAlkyhols("testValue");
     }
 
     @Test

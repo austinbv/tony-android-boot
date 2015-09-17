@@ -17,6 +17,7 @@ import retrofit.RetrofitError;
 
 import static io.pivotal.labsboot.alkyhol.AlkyholDelegate.DEFAULT_REQUEST;
 import static java.util.Collections.singletonList;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -40,9 +41,9 @@ public class AlkyholDelegateTest {
     @Test
     public void getAlkyhols_onSuccess() {
         final AlkyholResponse response = new AlkyholResponse(singletonList(new Alkyhol()));
-        doReturn(response).when(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
+        doReturn(response).when(mockAlkyholApiClient).getAlkyhols(anyString(), anyString());
         final AlkyholDelegate spiedDelegate = spy(delegate);
-        spiedDelegate.getAlkyhols();
+        spiedDelegate.getAlkyhols("testValue");
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(mockExecutorService).submit(captor.capture());
@@ -50,16 +51,16 @@ public class AlkyholDelegateTest {
 
         runnable.run();
 
-        verify(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
+        verify(mockAlkyholApiClient).getAlkyhols("testValue", DEFAULT_REQUEST);
         verify(spiedDelegate).notifySuccess();
         verify(mockAlkyholDataSource).addAlkyholResponse(response);
     }
 
     @Test
     public void getAlkyhols_onFailure() {
-        doThrow(mock(RetrofitError.class)).when(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
+        doThrow(mock(RetrofitError.class)).when(mockAlkyholApiClient).getAlkyhols(anyString(), anyString());
         final AlkyholDelegate spiedDelegate = spy(delegate);
-        spiedDelegate.getAlkyhols();
+        spiedDelegate.getAlkyhols("testValue");
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(mockExecutorService).submit(captor.capture());
@@ -67,7 +68,7 @@ public class AlkyholDelegateTest {
 
         runnable.run();
 
-        verify(mockAlkyholApiClient).getAlkyhols(DEFAULT_REQUEST);
+        verify(mockAlkyholApiClient).getAlkyhols("testValue", DEFAULT_REQUEST);
         verify(spiedDelegate).notifyError();
     }
 
@@ -75,11 +76,11 @@ public class AlkyholDelegateTest {
     public void loadNextPage_callsApiClientWithNextPage() {
         doReturn("/test.com/page=2").when(mockAlkyholDataSource).getNextPageLink();
 
-        delegate.loadNextPage();
+        delegate.loadNextPage("testType");
         ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(mockExecutorService).submit(captor.capture());
         captor.getValue().run();
 
-        verify(mockAlkyholApiClient).getAlkyhols("/test.com/page=2");
+        verify(mockAlkyholApiClient).getAlkyhols("testType", "/test.com/page=2");
     }
 }

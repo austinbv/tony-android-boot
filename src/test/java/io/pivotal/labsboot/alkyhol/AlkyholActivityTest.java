@@ -1,42 +1,41 @@
 package io.pivotal.labsboot.alkyhol;
 
-import android.app.Fragment;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import javax.inject.Inject;
+import org.robolectric.util.ActivityController;
 
 import io.pivotal.labsboot.BuildConfig;
-import io.pivotal.labsboot.R;
 import io.pivotal.labsboot.framework.ApplicationInjector;
 
+import static org.fest.assertions.api.ANDROID.assertThat;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants=BuildConfig.class, emulateSdk = 21)
 public class AlkyholActivityTest {
-    @Inject
-    protected AlkyholFragment.Factory mockAlkyholFragmentFactory;
+    private ActivityController<AlkyholActivity> controller;
 
     @Before
     public void setup() {
         ApplicationInjector.inject(this);
+
+        controller = Robolectric.buildActivity(AlkyholActivity.class);
     }
 
     @Test
-    public void creatingActivity_addsFragmentToView() throws Exception {
-        final Fragment fragment = new Fragment();
-        doReturn(fragment).when(mockAlkyholFragmentFactory).newInstance();
-        final AlkyholActivity activity = Robolectric.buildActivity(AlkyholActivity.class).create().get();
+    public void onCreation_actionBarIsSetup() {
+        final AlkyholActivity activity = controller.create().postCreate(null).get();
 
-        verify(mockAlkyholFragmentFactory).newInstance();
-        assertThat(activity.getFragmentManager().findFragmentById(R.id.activity_alkyhol_content_view)).isEqualTo(fragment);
+        assertThat(activity.mToolbar.getTitle()).isEqualTo("Alkyhol");
+        assertThat(activity.mTabLayout.getTabCount()).isEqualTo(3);
+        assertThat(activity.mTabLayout.getTabAt(0).getText()).isEqualTo("Beer");
+        assertThat(activity.mTabLayout.getTabAt(1).getText()).isEqualTo("Wine");
+        assertThat(activity.mTabLayout.getTabAt(2).getText()).isEqualTo("Spirits");
+        assertThat(activity.mViewPager).hasCurrentItem(0);
+        assertThat(activity.mViewPager.getAdapter()).hasCount(3);
     }
 }

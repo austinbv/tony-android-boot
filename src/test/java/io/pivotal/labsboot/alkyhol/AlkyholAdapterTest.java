@@ -84,10 +84,11 @@ public class AlkyholAdapterTest {
     @Test
     public void getViewThreeFromEnd_makesRequestForNextPage() {
         doReturn(true).when(mockAlkyholDataSource).nearEndOfData(anyInt());
+        adapter.setType("testType");
 
         adapter.onBindViewHolder(null, 0);
 
         verify(mockAlkyholDataSource).nearEndOfData(0);
-        verify(mockAlkyholDelegate).loadNextPage();
+        verify(mockAlkyholDelegate).loadNextPage("testType");
     }
 }

@@ -12,7 +12,7 @@ class AlkyholApiClient {
         mAlkyholRetrofitService = restAdapter.create(AlkyholRetrofitService.class);
     }
 
-    public AlkyholResponse getAlkyhols(final String href) {
+    public AlkyholResponse getAlkyhols(final String type, final String href) {
         return mAlkyholRetrofitService.getAlkyhols(href);
     }
 
