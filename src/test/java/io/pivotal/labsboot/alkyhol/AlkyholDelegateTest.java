@@ -53,7 +53,7 @@ public class AlkyholDelegateTest {
 
         verify(mockAlkyholApiClient).getAlkyhols("testValue", DEFAULT_REQUEST);
         verify(spiedDelegate).notifySuccess();
-        verify(mockAlkyholDataSource).addAlkyholResponse(response);
+        verify(mockAlkyholDataSource).addAlkyholResponse("testValue",   response);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class AlkyholDelegateTest {
 
     @Test
     public void loadNextPage_callsApiClientWithNextPage() {
-        doReturn("/test.com/page=2").when(mockAlkyholDataSource).getNextPageLink();
+        doReturn("/test.com/page=2").when(mockAlkyholDataSource).getNextPageLink("testType");
 
         delegate.loadNextPage("testType");
         ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);

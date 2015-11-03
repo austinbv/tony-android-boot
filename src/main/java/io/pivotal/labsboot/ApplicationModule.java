@@ -1,8 +1,6 @@
 package io.pivotal.labsboot;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 
 import com.bumptech.glide.Glide;
@@ -10,12 +8,11 @@ import com.bumptech.glide.RequestManager;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.inject.Named;
-
 import dagger.Module;
 import dagger.Provides;
 import io.pivotal.labsboot.alkyhol.AlkyholModule;
 import retrofit.RestAdapter;
+import retrofit.android.MainThreadExecutor;
 import retrofit.converter.JacksonConverter;
 
 @Module(
@@ -54,9 +51,8 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Named("MainThread")
-    Handler providesMainThreadHandler() {
-        return new Handler(Looper.getMainLooper());
+    MainThreadExecutor providesMainThreadHandler() {
+        return new MainThreadExecutor();
     }
 
     @Provides

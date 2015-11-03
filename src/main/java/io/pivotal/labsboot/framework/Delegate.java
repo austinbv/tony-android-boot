@@ -1,17 +1,19 @@
 package io.pivotal.labsboot.framework;
 
-import android.os.Handler;
-
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Delegate {
-    private Handler mHandler;
-    private Set<ErrorListener> mErrorListeners = new HashSet<>();
-    private Set<SuccessListener> mSuccessListeners = new HashSet<>();
+import retrofit.android.MainThreadExecutor;
 
-    public Delegate (final Handler handler) {
-        mHandler = handler;
+public class Delegate {
+    private final MainThreadExecutor mMainThreadExecutor;
+    private final Set<ErrorListener> mErrorListeners;
+    private final Set<SuccessListener> mSuccessListeners;
+
+    public Delegate (final MainThreadExecutor mainThreadExecutor) {
+        mMainThreadExecutor = mainThreadExecutor;
+        mErrorListeners = new HashSet<>();
+        mSuccessListeners = new HashSet<>();
     }
 
     public void registerSuccess(final SuccessListener successListener) {
@@ -31,7 +33,7 @@ public abstract class Delegate {
     }
 
     public void notifySuccess() {
-        mHandler.post(new Runnable() {
+        mMainThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 for (final SuccessListener listener : mSuccessListeners) {
@@ -42,7 +44,7 @@ public abstract class Delegate {
     }
 
     public void notifyError() {
-        mHandler.post(new Runnable() {
+        mMainThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 for (final ErrorListener listener : mErrorListeners) {

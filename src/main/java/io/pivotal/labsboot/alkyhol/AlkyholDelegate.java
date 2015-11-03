@@ -1,23 +1,23 @@
 package io.pivotal.labsboot.alkyhol;
 
-import android.os.Handler;
-
 import java.util.concurrent.ExecutorService;
 
 import io.pivotal.labsboot.framework.Delegate;
 import retrofit.RetrofitError;
+import retrofit.android.MainThreadExecutor;
 
-class AlkyholDelegate extends Delegate {
+class AlkyholDelegate {
     public static final String DEFAULT_REQUEST = "alkyhols";
 
     private volatile boolean mIsTaskCurrentlyRunning;
 
+    private final Delegate mDelegate;
     private final ExecutorService mExecutorService;
     private final AlkyholApiClient mAlkyholApiClient;
     private final AlkyholDataSource mAlkyholDataSource;
 
-    public AlkyholDelegate(final ExecutorService executorService, final AlkyholApiClient alkyholApiClient, final AlkyholDataSource alkyholDataSource, final Handler handler) {
-        super(handler);
+    public AlkyholDelegate(final ExecutorService executorService, final AlkyholApiClient alkyholApiClient, final AlkyholDataSource alkyholDataSource, final MainThreadExecutor mainThreadExecutor) {
+        mDelegate = new Delegate(mainThreadExecutor);
         mExecutorService = executorService;
         mAlkyholApiClient = alkyholApiClient;
         mAlkyholDataSource = alkyholDataSource;
@@ -33,10 +33,10 @@ class AlkyholDelegate extends Delegate {
             @Override
             public void run() {
                 try {
-                    mAlkyholDataSource.addAlkyholResponse(mAlkyholApiClient.getAlkyhols(type, href));
-                    notifySuccess();
+                    mAlkyholDataSource.addAlkyholResponse(type, mAlkyholApiClient.getAlkyhols(type, href));
+                    mDelegate.notifySuccess();
                 } catch (final RetrofitError error) {
-                    notifyError();
+                    mDelegate.notifyError();
                 }
                 mIsTaskCurrentlyRunning = false;
             }
@@ -45,7 +45,7 @@ class AlkyholDelegate extends Delegate {
 
     public void loadNextPage(final String type) {
         if (!mIsTaskCurrentlyRunning) {
-            getAlkyhols(type, mAlkyholDataSource.getNextPageLink());
+            getAlkyhols(type, mAlkyholDataSource.getNextPageLink(type));
         }
     }
 }

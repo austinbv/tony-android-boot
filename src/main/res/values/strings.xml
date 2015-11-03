@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_item_alkyhol">Alkyhols</string>
+    <string name="menu_item_store">Stores</string>
+    <string name="menu_item_home">Home</string>
+</resources>

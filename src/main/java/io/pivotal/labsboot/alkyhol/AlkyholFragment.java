@@ -32,6 +32,7 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mType = getArguments().getString(Args.TYPE);
+        mAlkyholDelegate.getAlkyhols(mType);
     }
 
     @Override
@@ -55,7 +56,6 @@ public class AlkyholFragment extends InjectionFragment implements ErrorListener,
 
         mAlkyholDelegate.registerSuccess(this);
         mAlkyholDelegate.registerError(this);
-        mAlkyholDelegate.getAlkyhols(mType);
     }
 
     @Override

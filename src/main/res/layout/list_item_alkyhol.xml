@@ -22,8 +22,8 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:padding="5dp"
-        android:textSize="22sp"
+        android:padding="@dimen/padding_small"
+        android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
         tools:text="Bud Light" />
 

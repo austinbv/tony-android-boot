@@ -20,7 +20,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AlkyholDataSourceTest {
+public class AlkyholDataSourceDelegateTest {
     @Mock Handler mockHandler;
     private AlkyholDataSource empty;
     private AlkyholDataSource one;
@@ -30,23 +30,23 @@ public class AlkyholDataSourceTest {
     public void setup() {
         empty = new AlkyholDataSource(mockHandler);
         one = new AlkyholDataSource(mockHandler);
-        one.addAlkyholResponse(new AlkyholResponse(singletonList(new Alkyhol(1))));
+        one.addAlkyholResponse("testType", new AlkyholResponse(singletonList(new Alkyhol(1))));
         many = new AlkyholDataSource(mockHandler);
-        many.addAlkyholResponse(new AlkyholResponse(asList(new Alkyhol(2), new Alkyhol(3))));
+        many.addAlkyholResponse("testType", new AlkyholResponse(asList(new Alkyhol(2), new Alkyhol(3))));
     }
 
     @Test
     public void size() {
-        assertThat(empty.size()).isEqualTo(0);
-        assertThat(one.size()).isEqualTo(1);
-        assertThat(many.size()).isGreaterThan(1);
+        assertThat(empty.size("testType")).isEqualTo(0);
+        assertThat(one.size("testType")).isEqualTo(1);
+        assertThat(many.size("testType")).isGreaterThan(1);
     }
 
     @Test
     public void addAlkyhols_notifiesListeners() {
         final AlkyholDataSource spiedDataSource = spy(many);
 
-        spiedDataSource.addAlkyholResponse(new AlkyholResponse());
+        spiedDataSource.addAlkyholResponse("testType", new AlkyholResponse());
 
         verify(spiedDataSource).notifyDataSetChanged();
     }
@@ -55,25 +55,26 @@ public class AlkyholDataSourceTest {
     public void getNextPageLink() {
         final AlkyholDataSource dataSource = new AlkyholDataSource(mockHandler);
 
-        dataSource.addAlkyholResponse(new AlkyholResponse(EMPTY_LIST, singletonList(new Link("next", "nextPageUrl"))));
+        dataSource.addAlkyholResponse("testType", new AlkyholResponse(EMPTY_LIST, singletonList(new Link("next", "nextPageUrl"))));
 
-        assertThat(dataSource.getNextPageLink()).isEqualTo("nextPageUrl");
+        assertThat(dataSource.getNextPageLink("testType")).isEqualTo("nextPageUrl");
     }
 
     @Test
     public void getAlkyhol() {
-        assertThat(one.getAlkyhol(0)).isEqualTo(new Alkyhol(1));
-        assertThat(many.getAlkyhol(0)).isEqualTo(new Alkyhol(2));
-        assertThat(many.getAlkyhol(1)).isEqualTo(new Alkyhol(3));
+        assertThat(empty.getAlkyhol("testType", 0)).isNull();
+        assertThat(one.getAlkyhol("testType", 0)).isEqualTo(new Alkyhol(1));
+        assertThat(many.getAlkyhol("testType", 0)).isEqualTo(new Alkyhol(2));
+        assertThat(many.getAlkyhol("testType", 1)).isEqualTo(new Alkyhol(3));
     }
 
     @Test
     public void nearEndOfData() {
         final AlkyholDataSource alkyholDataSource = new AlkyholDataSource(mockHandler, 1);
-        alkyholDataSource.addAlkyholResponse(new AlkyholResponse(asList(new Alkyhol(1), new Alkyhol(2), new Alkyhol(3))));
+        alkyholDataSource.addAlkyholResponse("testType", new AlkyholResponse(asList(new Alkyhol(1), new Alkyhol(2), new Alkyhol(3))));
 
-        assertThat(alkyholDataSource.nearEndOfData(0)).isFalse();
-        assertThat(alkyholDataSource.nearEndOfData(1)).isFalse();
-        assertThat(alkyholDataSource.nearEndOfData(2)).isTrue();
+        assertThat(alkyholDataSource.nearEndOfData("testType", 0)).isFalse();
+        assertThat(alkyholDataSource.nearEndOfData("testType", 1)).isFalse();
+        assertThat(alkyholDataSource.nearEndOfData("testType", 2)).isTrue();
     }
 }

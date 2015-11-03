@@ -7,13 +7,13 @@ import com.bumptech.glide.RequestManager;
 
 import java.util.concurrent.Executors;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import io.pivotal.labsboot.framework.AdapterHelper;
 import retrofit.RestAdapter;
+import retrofit.android.MainThreadExecutor;
 
 @Module(
         injects = {
@@ -28,16 +28,16 @@ public class AlkyholModule {
     @Singleton
     AlkyholDelegate providesDelegate(
             final RestAdapter restAdapter,
-            @Named("MainThread") final Handler handler,
+            final MainThreadExecutor mainThreadExecutor,
             final AlkyholDataSource alkyholDataSource)
     {
-        return new AlkyholDelegate(Executors.newSingleThreadExecutor(), new AlkyholApiClient(restAdapter), alkyholDataSource, handler);
+        return new AlkyholDelegate(Executors.newSingleThreadExecutor(), new AlkyholApiClient(restAdapter), alkyholDataSource, mainThreadExecutor);
     }
 
     @Provides
     @Singleton
-    AlkyholDataSource providesDataSource(@Named("MainThread") final Handler handler) {
-        return new AlkyholDataSource(handler);
+    AlkyholDataSource providesDataSource(final MainThreadExecutor executor) {
+        return new AlkyholDataSource(executor);
     }
 
     @Provides

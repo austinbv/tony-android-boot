@@ -6,12 +6,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import io.pivotal.labsboot.R;
 import io.pivotal.labsboot.framework.InjectionActivity;
+
+import javax.inject.Inject;
 
 public class AlkyholActivity extends InjectionActivity {
     @Bind(R.id.appbar_toolbar_tab_layout) protected TabLayout mTabLayout;
@@ -24,6 +23,7 @@ public class AlkyholActivity extends InjectionActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_android_boot);
+
     }
 
     @Override

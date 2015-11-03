@@ -9,13 +9,13 @@ import io.pivotal.labsboot.framework.AdapterHelper;
 import io.pivotal.labsboot.framework.DataSetChangeListener;
 
 class AlkyholAdapter extends RecyclerView.Adapter<AlkyholViewHolder> implements DataSetChangeListener {
-    private LayoutInflater mLayoutInflater;
-    private AdapterHelper mAdapterHelper;
-    private AlkyholDelegate mAlkyholDelegate;
-    private AlkyholDataSource mAlkyholDataSource;
-    private AlkyholPresenter mAlkyholPresenter;
-    private AlkyholViewHolder.Factory mViewHolderFactory;
     private String mType;
+    private AdapterHelper mAdapterHelper;
+    private LayoutInflater mLayoutInflater;
+    private AlkyholDelegate mAlkyholDelegate;
+    private AlkyholPresenter mAlkyholPresenter;
+    private AlkyholDataSource mAlkyholDataSource;
+    private AlkyholViewHolder.Factory mViewHolderFactory;
 
     public AlkyholAdapter(
             final LayoutInflater layoutInflater,
@@ -31,7 +31,7 @@ class AlkyholAdapter extends RecyclerView.Adapter<AlkyholViewHolder> implements 
         mAlkyholDelegate = alkyholDelegate;
         mAlkyholDataSource = alkyholDataSource;
         mAdapterHelper = adapterHelper;
-        alkyholDataSource.registerDataSetChangeLisener(this);
+        alkyholDataSource.registerDataSetChangeListener(this);
     }
 
     @Override
@@ -41,15 +41,15 @@ class AlkyholAdapter extends RecyclerView.Adapter<AlkyholViewHolder> implements 
 
     @Override
     public void onBindViewHolder(final AlkyholViewHolder holder, final int position) {
-        if (mAlkyholDataSource.nearEndOfData(position)) {
+        if (mAlkyholDataSource.nearEndOfData(mType, position)) {
             mAlkyholDelegate.loadNextPage(mType);
         }
-        mAlkyholPresenter.hydrateView(holder, mAlkyholDataSource.getAlkyhol(position));
+        mAlkyholPresenter.hydrateView(holder, mAlkyholDataSource.getAlkyhol(mType, position));
     }
 
     @Override
     public int getItemCount() {
-        return mAlkyholDataSource.size();
+        return mAlkyholDataSource.size(mType);
     }
 
     @Override

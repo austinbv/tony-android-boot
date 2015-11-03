@@ -18,6 +18,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -35,8 +36,8 @@ public class AlkyholAdapterTest {
 
     @Before
     public void setup() {
-        doReturn(new Alkyhol(1)).when(mockAlkyholDataSource).getAlkyhol(0);
-        doReturn(new Alkyhol(2)).when(mockAlkyholDataSource).getAlkyhol(1);
+        doReturn(new Alkyhol(1)).when(mockAlkyholDataSource).getAlkyhol("testType", 0);
+        doReturn(new Alkyhol(2)).when(mockAlkyholDataSource).getAlkyhol("testType", 1);
 
         adapter = new AlkyholAdapter(
                 mockLayoutInflater,
@@ -50,7 +51,7 @@ public class AlkyholAdapterTest {
 
     @Test
     public void onCreation_setsSelfAsDataListener() {
-        verify(mockAlkyholDataSource).registerDataSetChangeLisener(adapter);
+        verify(mockAlkyholDataSource).registerDataSetChangeListener(adapter);
     }
 
     @Test
@@ -75,6 +76,7 @@ public class AlkyholAdapterTest {
     @Test
     public void onBindViewHolder() {
         final AlkyholViewHolder mockViewHolder = mock(AlkyholViewHolder.class);
+        adapter.setType("testType");
 
         adapter.bindViewHolder(mockViewHolder, 0);
 
@@ -83,12 +85,12 @@ public class AlkyholAdapterTest {
 
     @Test
     public void getViewThreeFromEnd_makesRequestForNextPage() {
-        doReturn(true).when(mockAlkyholDataSource).nearEndOfData(anyInt());
+        doReturn(true).when(mockAlkyholDataSource).nearEndOfData(anyString(), anyInt());
         adapter.setType("testType");
 
         adapter.onBindViewHolder(null, 0);
 
-        verify(mockAlkyholDataSource).nearEndOfData(0);
+        verify(mockAlkyholDataSource).nearEndOfData("testType", 0);
         verify(mockAlkyholDelegate).loadNextPage("testType");
     }
 }

@@ -25,6 +25,6 @@ public class AlkyholApiClientTest {
 
         assertThat(apiClient.getAlkyhols("testType", "/alkyhols")).isEqualTo(expected);
         verify(mockRestAdapter).create(AlkyholApiClient.AlkyholRetrofitService.class);
-        verify(mockService).getAlkyhols("/alkyhols");
+        verify(mockService).getAlkyhols("/alkyhols?type=testType");
     }
 }

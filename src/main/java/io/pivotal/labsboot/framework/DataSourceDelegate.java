@@ -1,25 +1,25 @@
 package io.pivotal.labsboot.framework;
 
-import android.os.Handler;
+import retrofit.android.MainThreadExecutor;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class DataSource {
-    private Handler mHandler;
+public class DataSourceDelegate {
+    private MainThreadExecutor mExecutor;
     private Set<WeakReference<DataSetChangeListener>> mChangeListeners = new HashSet<>();
 
-    public DataSource(final Handler handler) {
-        mHandler = handler;
+    public DataSourceDelegate(final MainThreadExecutor executor) {
+        mExecutor = executor;
     }
 
-    public void registerDataSetChangeLisener(final DataSetChangeListener listener) {
+    public void registerDataSetChangeListener(final DataSetChangeListener listener) {
         mChangeListeners.add(new WeakReference<>(listener));
     }
 
     public void notifyDataSetChanged() {
-        mHandler.post(new Runnable() {
+        mExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 for (final WeakReference<DataSetChangeListener> reference : mChangeListeners) {

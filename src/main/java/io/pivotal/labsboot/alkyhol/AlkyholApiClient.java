@@ -13,7 +13,13 @@ class AlkyholApiClient {
     }
 
     public AlkyholResponse getAlkyhols(final String type, final String href) {
-        return mAlkyholRetrofitService.getAlkyhols(href);
+        if (href.contains("type")) {
+            return mAlkyholRetrofitService.getAlkyhols(href);
+        }
+        if (href.contains("?")) {
+            return mAlkyholRetrofitService.getAlkyhols(href + "&type=" + type);
+        }
+        return mAlkyholRetrofitService.getAlkyhols(href + "?type=" + type);
     }
 
     interface AlkyholRetrofitService {

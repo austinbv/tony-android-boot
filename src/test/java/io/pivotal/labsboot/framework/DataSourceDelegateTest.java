@@ -9,36 +9,32 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import retrofit.android.MainThreadExecutor;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DataSourceTest {
-    @Mock Handler mockHandler;
+public class DataSourceDelegateTest {
+    @Mock MainThreadExecutor mockExecutor;
 
-    TestDataSource dataSource;
+    DataSourceDelegate dataSource;
 
     @Before
     public void setup() {
-        dataSource = new TestDataSource(mockHandler);
+        dataSource = new DataSourceDelegate(mockExecutor);
     }
 
     @Test
     public void notifyDataSetChanged() {
         final DataSetChangeListener listener = mock(DataSetChangeListener.class);
-        dataSource.registerDataSetChangeLisener(listener);
+        dataSource.registerDataSetChangeListener(listener);
 
         dataSource.notifyDataSetChanged();
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
-        verify(mockHandler).post(captor.capture());
+        verify(mockExecutor).execute(captor.capture());
         captor.getValue().run();
         verify(listener).onDataSetChanged();
-    }
-
-    private static class TestDataSource extends DataSource {
-        public TestDataSource(final Handler handler) {
-            super(handler);
-        }
     }
 }

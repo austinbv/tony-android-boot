@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="172dp"
+    android:background="@color/primary"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/status_bar_height"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:elevation="4dp"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:src="@drawable/placeholder"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Anthony Tarantini"/>
-
+        android:text="Username"
+        android:paddingLeft="@dimen/padding_medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="anthony.tarantini@gmail.com"/>
+        android:text="username@mymail.com"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
 </LinearLayout>
